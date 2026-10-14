@@ -101,3 +101,5 @@ tr.conflito td{background:#fff1f2}
 .os-badge{display:block;width:max-content;margin:8px auto 14px;padding:8px 23px 8px 28px;border-radius:999px;background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-weight:700;font-size:1.3rem;letter-spacing:.24em;box-shadow:0 8px 20px rgba(176,30,40,.35)}
 .os-tag{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:#9ea1a8;font-size:.78rem;font-weight:600;letter-spacing:.18em;animation:rise .8s 1.3s both cubic-bezier(.2,.8,.2,1)}
 .os-foot{text-align:center;color:var(--gray);font-size:.75rem;font-weight:600;letter-spacing:.18em;padding:6px 0 26px}
+
+.quem{white-space:normal;min-width:170px}.quem span{display:block;font-weight:600}.quem small{display:block;color:#6d7076;font-size:.7rem;margin-top:2px}

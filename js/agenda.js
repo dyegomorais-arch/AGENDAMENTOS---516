@@ -1,6 +1,6 @@
 import {
   auth, db, onAuthStateChanged, signOut,
-  collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp
+  collection, doc, addDoc, updateDoc, deleteDoc, getDoc, onSnapshot, serverTimestamp
 } from './firebase.js';
 
 const COLECAO = 'agendamentos';
@@ -14,6 +14,15 @@ const br = iso => iso.split('-').reverse().join('/');
 const diaSemana = iso => DIAS[new Date(iso + 'T12:00').getDay()];
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const isoDe = d => d.toISOString().slice(0, 10);
+// ---------- quem criou / alterou ----------
+const nomeCurto = e => (e ? String(e).split('@')[0] : '');
+const quando = ts => {
+  const d = ts?.toDate ? ts.toDate() : null;
+  return d ? d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+};
+// "versão" do registro = momento da última gravação (0 enquanto o servidor ainda não confirmou)
+const versaoDe = a => (a?.atualizadoEm || a?.criadoEm)?.toMillis?.() ?? 0;
+let versaoBase = 0; // versão do agendamento no momento em que abri para editar
 let visao = 'dia';
 let editandoId = null;
 const selectSyncs = {};
@@ -184,12 +193,13 @@ function render() {
   dados.forEach(a => (grupos[a.data] = grupos[a.data] || []).push(a));
   $('lista').innerHTML = Object.entries(grupos).map(([d, itens]) => `
     <div class="day"><h3>AGENDA DE SERVIÇO - ${br(d)} · ${diaSemana(d)}</h3>
-    <div class="tw"><table><thead><tr><th>Serviço</th><th>Placa</th><th>Tag</th><th>Veículo</th><th>Horário</th><th>Empresa</th><th>Local</th><th>Status</th><th>Alta</th><th></th></tr></thead>
+    <div class="tw"><table><thead><tr><th>Serviço</th><th>Placa</th><th>Tag</th><th>Veículo</th><th>Horário</th><th>Empresa</th><th>Local</th><th>Status</th><th>Alta</th><th>Agendado por</th><th></th></tr></thead>
     <tbody>${itens.map((a, i) => { const excede = excessoDe(a, ocup) > 0; return `<tr class="${excede ? 'conflito' : ''}" style="animation-delay:${i * 60}ms">
       <td>${esc(a.servico)}</td><td><b>${esc(a.placa)}</b></td><td>${esc(a.tag)}</td>
       <td>${esc(a.veiculo)}</td><td>${a.horario}${excede ? '<span class="warn" title="Este horário tem mais serviços que técnicos disponíveis. Reagende um deles.">⚠ acima do limite</span>' : ''}</td><td>${esc(a.empresa)}</td><td>${esc(a.local)}</td>
       <td><span class="badge b-${a.status}">${a.status}</span></td>
       <td>${a.alta ? `<span class="badge ${a.alta === 'SEM ALTA' ? 'b-semalta' : 'b-altaaberta'}">${esc(a.alta)}</span>` : '-'}</td>
+      <td class="quem">${a.criadoPor ? `<span title="${esc(a.criadoPor)}">${esc(a.criadoPor)}</span>` : '-'}${a.atualizadoPor ? `<small title="${esc(a.atualizadoPor)}">alterado por ${esc(nomeCurto(a.atualizadoPor))}${quando(a.atualizadoEm) ? ' · ' + quando(a.atualizadoEm) : ''}</small>` : ''}</td>
       <td><button class="ico" title="Editar" data-edit="${a.id}">✏️</button><button class="ico" title="PDF de confirmação" data-pdf="${a.id}">📄</button><button class="ico" title="Excluir" data-del="${a.id}">🗑️</button></td>
     </tr>`; }).join('')}</tbody></table></div></div>`).join('');
 }
@@ -217,6 +227,20 @@ $('form').addEventListener('submit', async e => {
   let idSalvo = idAtual;
   try {
     const quem = auth.currentUser?.email || '';
+    if (idAtual) {
+      // aviso de conflito: alguém salvou este agendamento depois que eu abri para editar?
+      const atual = await getDoc(doc(db, COLECAO, idAtual));
+      if (!atual.exists()) {
+        btn.disabled = false; cancelarEdicao(); render();
+        return toast('Este agendamento foi excluído por outra pessoa.');
+      }
+      const dados = { id: idAtual, ...atual.data() };
+      if (versaoBase && versaoDe(dados) && versaoDe(dados) !== versaoBase) {
+        const por = dados.atualizadoPor || dados.criadoPor || 'outro usuário';
+        const manter = confirm(`${por} alterou este agendamento em ${quando(dados.atualizadoEm || dados.criadoEm)}, depois que você abriu a edição.\n\nOK = sobrescrever com o que você digitou\nCancelar = descartar o seu e carregar a versão mais recente`);
+        if (!manter) { btn.disabled = false; iniciarEdicao(dados); return toast('Versão mais recente carregada. Confira e salve de novo se quiser.'); }
+      }
+    }
     if (idAtual) await updateDoc(doc(db, COLECAO, idAtual), { ...a, atualizadoEm: serverTimestamp(), atualizadoPor: quem });
     else idSalvo = (await addDoc(collection(db, COLECAO), { ...a, criadoEm: serverTimestamp(), criadoPor: quem })).id;
   } catch (err) {
@@ -237,6 +261,7 @@ $('form').servico.addEventListener('change', () => refreshHorarios());
 function iniciarEdicao(a) {
   if (!a) return;
   editandoId = a.id;
+  versaoBase = versaoDe(a);
   const f = $('form');
   ['servico', 'descricao', 'placa', 'tag', 'veiculo', 'empresa', 'data', 'horario', 'local', 'endereco', 'contato', 'alta']
     .forEach(n => { if (f[n]) f[n].value = a[n] ?? (n === 'alta' ? 'ALTA ABERTA' : ''); });

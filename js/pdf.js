@@ -51,6 +51,8 @@ function gerarPdfConfirmacao(a) {
       ['Serviço', a.servico], ['Empresa', a.empresa],
       ['Placa', a.placa], ['Tag', a.tag || '-'], ['Tipo de veículo', a.veiculo],
       ['Data', fmt(a.data) + ' (' + semana(a.data) + ')'], ['Horário', faixaHorario(a)], ['Status', a.status], ['Alta', a.alta || '-'],
+      ['Agendado por', a.criadoPor || '-'],
+      ...(a.atualizadoPor ? [['Última alteração', a.atualizadoPor]] : []),
       // só no Salobo: mostra o endereço (Oficina Tauari) na tabela
       ...(String(a.local || '').trim().toLowerCase() === 'salobo' ? [['Endereço', a.endereco || '-']] : [])
     ]
@@ -122,8 +124,8 @@ function gerarPdfTecnico(periodo, itens) {
   doc.autoTable({
     startY: 48, theme: 'grid', styles: { fontSize: 10, cellPadding: 3.2, lineColor: [226, 228, 232] },
     headStyles: { fillColor: INK, textColor: 255 }, alternateRowStyles: { fillColor: SOFT },
-    head: [['Data', 'Horário', 'Serviço', 'Placa', 'Tag', 'Veículo', 'Empresa', 'Local']],
-    body: itens.map(a => [fmt(a.data), faixaHorario(a), a.servico + (a.descricao ? ' - ' + a.descricao : ''), a.placa, a.tag || '-', a.veiculo, a.empresa, a.local]),
+    head: [['Data', 'Horário', 'Serviço', 'Placa', 'Tag', 'Veículo', 'Empresa', 'Local', 'Agendado por']],
+    body: itens.map(a => [fmt(a.data), faixaHorario(a), a.servico + (a.descricao ? ' - ' + a.descricao : ''), a.placa, a.tag || '-', a.veiculo, a.empresa, a.local, a.criadoPor || '-']),
     columnStyles: { 0: { fontStyle: 'bold' }, 1: { fontStyle: 'bold', textColor: RED } },
     margin: { bottom: 16 }
   });
