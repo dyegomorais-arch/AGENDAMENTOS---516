@@ -103,3 +103,21 @@ tr.conflito td{background:#fff1f2}
 .os-foot{text-align:center;color:var(--gray);font-size:.75rem;font-weight:600;letter-spacing:.18em;padding:6px 0 26px}
 
 .quem{white-space:normal;min-width:170px}.quem span{display:block;font-weight:600}.quem small{display:block;color:#6d7076;font-size:.7rem;margin-top:2px}
+
+/* ---------- TEXTO DESTACADO AO LADO DA LOGO (CABEÇALHO) ---------- */
+.brand{display:flex;align-items:center;gap:20px}
+.brand-os{position:relative;padding:6px 22px 6px 28px;border-radius:999px;background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-weight:700;font-size:1.7rem;line-height:1.1;letter-spacing:.2em;box-shadow:0 6px 20px rgba(176,30,40,.45)}
+.brand-os::before{content:'';position:absolute;left:-12px;top:50%;width:2px;height:34px;transform:translateY(-50%);background:#4a4d53}
+@media(max-width:600px){.top{padding:10px 14px}.brand{gap:12px}.top img{height:34px}.brand-os{font-size:1.1rem;padding:4px 14px 4px 18px}.brand-os::before{left:-8px;height:24px}.top span:not(.brand-os){display:none}}
+
+/* ---------- LOGIN: OLHINHO DA SENHA E AVISO DE NOVIDADE ---------- */
+.pass-wrap{position:relative}
+.pass-wrap input{padding-right:46px}
+.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;display:grid;place-items:center;border:0;background:none;color:var(--gray);cursor:pointer;border-radius:8px;transition:.2s}
+.eye:hover{color:var(--red);background:#fbeeef}
+.eye[hidden],.eye svg[hidden]{display:none}
+.aviso-novo{display:flex;align-items:center;gap:12px;margin:0 0 20px;padding:12px 14px;border-radius:12px;background:linear-gradient(135deg,#fbeeef,#fff6e6);border:1.5px solid var(--red);border-left-width:5px;color:var(--red-d);font-size:.85rem;line-height:1.4;animation:pulso 2.4s ease-in-out 2s infinite}
+.aviso-novo p{margin:0}
+.aviso-novo strong{font-weight:700}
+.aviso-ico{font-size:1.5rem;line-height:1}
+@keyframes pulso{0%,100%{box-shadow:0 0 0 0 rgba(176,30,40,.0)}50%{box-shadow:0 0 0 6px rgba(176,30,40,.14)}}
