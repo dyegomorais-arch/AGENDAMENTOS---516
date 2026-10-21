@@ -29,16 +29,3 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
     btn.disabled = false;
   }
 });
-
-// Olhinho: mostra/oculta a senha.
-const campoSenha = document.getElementById('pass');
-const btnVer = document.getElementById('verSenha');
-btnVer.addEventListener('click', () => {
-  const mostrar = campoSenha.type === 'password';
-  campoSenha.type = mostrar ? 'text' : 'password';
-  btnVer.querySelector('.eye-on').hidden = mostrar;
-  btnVer.querySelector('.eye-off').hidden = !mostrar;
-  const t = mostrar ? 'Ocultar senha' : 'Mostrar senha';
-  btnVer.setAttribute('aria-label', t); btnVer.title = t;
-  campoSenha.focus();
-});
