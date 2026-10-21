@@ -106,9 +106,6 @@ tr.conflito td{background:#fff1f2}
 
 /* ---------- TEXTO DESTACADO AO LADO DA LOGO (CABEÇALHO) ---------- */
 .brand{display:flex;align-items:center;gap:20px}
-.brand-os{position:relative;padding:6px 22px 6px 28px;border-radius:999px;background:linear-gradient(135deg,var(--red),var(--red-d));color:#fff;font-weight:700;font-size:1.7rem;line-height:1.1;letter-spacing:.2em;box-shadow:0 6px 20px rgba(176,30,40,.45)}
-.brand-os::before{content:'';position:absolute;left:-12px;top:50%;width:2px;height:34px;transform:translateY(-50%);background:#4a4d53}
-@media(max-width:600px){.top{padding:10px 14px}.brand{gap:12px}.top img{height:34px}.brand-os{font-size:1.1rem;padding:4px 14px 4px 18px}.brand-os::before{left:-8px;height:24px}.top span:not(.brand-os){display:none}}
 
 /* ---------- LOGIN: OLHINHO DA SENHA (dentro do campo, à direita) ---------- */
 .pass-wrap{position:relative}
@@ -146,3 +143,9 @@ tr.conflito td{background:#fff1f2}
 .card .btn{padding:10px 18px}
 .novidade{max-width:340px;padding:12px 16px}
 .login{gap:18px}
+
+/* ---------- CABEÇALHO: "OS 516" SÓ LETRAS, GRANDE E DESTACADO ---------- */
+.top .brand-os{padding:0;background:none;border-radius:0;box-shadow:none;margin:0;color:#fff;font-weight:700;font-size:2.4rem;line-height:1;letter-spacing:.14em;text-shadow:0 0 18px rgba(255,60,70,.75),0 2px 0 var(--red),0 4px 14px rgba(0,0,0,.5)}
+.top .brand-os::before{display:none}
+.top .brand{gap:22px}
+@media(max-width:600px){.top{padding:10px 14px}.top .brand{gap:12px}.top img{height:34px}.top .brand-os{font-size:1.5rem}.top span:not(.brand-os){display:none}}
