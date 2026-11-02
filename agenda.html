@@ -6,7 +6,7 @@
 <title>Sillion | Agenda de Serviço</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=5">
+<link rel="stylesheet" href="css/style.css?v=9">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 </head>
@@ -43,7 +43,7 @@
    <div class="bar"><div class="field"><label>Data de referência</label><input type="date" id="filtro"></div><div class="field" style="max-width:150px;flex:0 0 auto"><label>Filtrar placa</label><input id="filtroPlaca" placeholder="Ex.: ABC1D23" style="text-transform:uppercase"></div><button class="btn" id="pdfTec">📄 PDF do técnico</button></div>
    <p class="resumo" id="resumo"></p><div id="lista"></div></div></section>
  </div>
- <footer class="foot">OS 516</footer>
+ <footer class="foot">OS 516 · v9</footer>
 
  <div class="modal" id="modal"><div class="mbox" role="dialog" aria-modal="true">
   <div class="mh"><div><h2 id="tituloForm">Novo agendamento</h2><small id="mSub"></small></div><button type="button" class="mx" id="mx" aria-label="Fechar">✕</button></div>
@@ -53,9 +53,7 @@
    <div class="field"><label>Descrição (opcional)</label><input name="descricao" placeholder="Ex.: telemetria apagada"></div>
    <div class="sec">VEÍCULO</div>
    <div class="row2"><div class="field"><label>Placa</label><input name="placa" required maxlength="8" style="text-transform:uppercase"></div><div class="field"><label>Tag</label><input name="tag"></div></div>
-   <div class="field"><label>Tipo de veículo</label>
-    <div class="dd" id="ddVeic"><button type="button" class="dd-btn" id="ddBtn"><span id="ddTxt" class="ph">Selecione o tipo de veículo</span><i class="dd-arrow">▾</i></button><div class="dd-list" id="ddList"></div></div>
-    <input type="hidden" name="veiculo"><input id="veicOutro" class="hide" placeholder="Digite o tipo de veículo" maxlength="40"></div>
+   <div class="field"><label>Tipo de veículo</label><input name="veiculo" placeholder="Ônibus, Hilux, Caminhão..." required maxlength="60"></div>
    <div class="field"><label>Empresa</label><input name="empresa" required></div>
    <div class="sec">QUANDO E ONDE</div>
    <div class="row2"><div class="field"><label>Data</label><input type="date" name="data" required></div><div class="field"><label>Horário</label><select name="horario"></select></div></div>
@@ -75,7 +73,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="js/logo-data.js"></script>
 <script src="js/horarios.js"></script>
-<script src="js/pdf.js?v=6"></script>
-<script type="module" src="js/agenda.js?v=6"></script>
+<script src="js/pdf.js?v=9"></script>
+<script type="module" src="js/agenda.js?v=9"></script>
 </body>
 </html>

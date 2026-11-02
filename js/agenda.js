@@ -279,7 +279,7 @@ $('form').addEventListener('submit', async e => {
   const f = $('form');
   const a = {
     servico: st.servico, descricao: f.descricao.value, placa: f.placa.value.toUpperCase(), tag: f.tag.value,
-    veiculo: f.veiculo.value, empresa: f.empresa.value, data: f.data.value, horario: f.horario.value,
+    veiculo: f.veiculo.value.trim(), empresa: f.empresa.value, data: f.data.value, horario: f.horario.value,
     local: st.local, endereco: f.endereco.value, contato: st.contato, alta: st.alta
   };
   if (!a.veiculo) return toast('Selecione o tipo de veículo.');
@@ -331,7 +331,7 @@ $('form').addEventListener('submit', async e => {
 
 function cancelar() {
   editId = null; versaoBase = 0;
-  $('form').reset(); ddSet('');
+  $('form').reset();
   st.servico = 'Instalação'; st.local = 'Atendimento C.I'; st.contato = 'GERSON SANTOS'; st.alta = 'ALTA ABERTA';
   chips(); horarios();
   $('tituloForm').textContent = 'Novo agendamento'; $('btnSalvar').textContent = 'Agendar';
@@ -344,7 +344,6 @@ function iniciarEdicao(a) {
   editId = a.id; versaoBase = versaoDe(a);
   const f = $('form');
   ['descricao', 'placa', 'tag', 'veiculo', 'empresa', 'data', 'endereco'].forEach(n => f[n].value = a[n] || '');
-  ddSet(a.veiculo);
   Object.assign(st, { servico: a.servico, local: a.local, contato: a.contato, alta: a.alta || 'ALTA ABERTA' });
   chips(); horarios(a.horario);
   $('tituloForm').textContent = 'Editar agendamento'; $('btnSalvar').textContent = 'Salvar alterações';
@@ -399,50 +398,6 @@ $('pdfTec').onclick = () => {
   if (!it.length) return toast('Não há agendamentos nesse período.');
   comLoading($('pdfTec'), 'Gerando PDF do técnico...', () => gerarPdfTecnico(p, it), 'PDF do técnico gerado! 📄');
 };
-
-// ---------- lista suspensa de tipos de veículo ----------
-// Registros antigos com um tipo digitado à mão (fora desta lista) continuam funcionando: aparecem em "Outro".
-const VEIC = [
-  ['Leve', '🚗', ['Carro de passeio', 'Pickup (Hilux)', 'SUV', 'Van', 'Utilitário']],
-  ['Médio', '🚐', ['Micro-ônibus', 'Caminhão leve (3/4)', 'Caminhão toco']],
-  ['Pesado', '🚛', ['Ônibus', 'Caminhão truck', 'Carreta / Cavalo mecânico', 'Caminhão-pipa', 'Caminhão munck']]
-];
-const TODOS = VEIC.flatMap(g => g[2]);
-function ddBuild() {
-  let n = 0;
-  $('ddList').innerHTML = VEIC.map(([g, ic, it]) => `<div class="dd-g">${ic} ${g}</div>` +
-    it.map(v => `<button type="button" class="dd-o" data-v="${v}" style="--i:${n++}">${v}</button>`).join('')).join('') +
-    `<div class="dd-g">✏️ Outro</div><button type="button" class="dd-o" data-v="__outro" style="--i:${n}">Outro tipo (digitar)</button>`;
-}
-function ddSet(v) {
-  const f = $('form'), o = $('veicOutro'), outro = !!v && !TODOS.includes(v), g = VEIC.find(g => g[2].includes(v));
-  f.veiculo.value = v || ''; o.classList.toggle('hide', !outro); o.value = outro ? v : '';
-  $('ddTxt').textContent = !v ? 'Selecione o tipo de veículo' : outro ? '✏️ Outro tipo' : g[1] + ' ' + v;
-  $('ddTxt').classList.toggle('ph', !v);
-  document.querySelectorAll('.dd-o').forEach(b => b.classList.toggle('on', b.dataset.v === (outro ? '__outro' : v)));
-  $('ddVeic').classList.remove('open');
-}
-function ddOutro() {
-  const o = $('veicOutro');
-  $('form').veiculo.value = o.value.trim(); o.classList.remove('hide');
-  $('ddTxt').textContent = '✏️ Outro tipo'; $('ddTxt').classList.remove('ph');
-  document.querySelectorAll('.dd-o').forEach(b => b.classList.toggle('on', b.dataset.v === '__outro'));
-  $('ddVeic').classList.remove('open'); o.focus();
-}
-ddBuild();
-$('ddBtn').onclick = () => {
-  const d = $('ddVeic'); d.classList.toggle('open');
-  if (d.classList.contains('open')) setTimeout(() => d.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 350);
-};
-$('ddList').addEventListener('click', e => {
-  const b = e.target.closest('.dd-o'); if (!b) return;
-  b.dataset.v === '__outro' ? ddOutro() : ddSet(b.dataset.v);
-});
-$('veicOutro').addEventListener('input', e => { $('form').veiculo.value = e.target.value.trim(); });
-document.addEventListener('click', e => { if (!e.target.closest('#ddVeic')) $('ddVeic').classList.remove('open'); });
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && $('ddVeic').classList.contains('open')) { $('ddVeic').classList.remove('open'); e.stopImmediatePropagation(); }
-}, true);
 
 // ---------- sair ----------
 $('sair').onclick = async () => { await signOut(auth); location.href = 'index.html'; };

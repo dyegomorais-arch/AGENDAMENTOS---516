@@ -1,3 +1,14 @@
+// Baixa o PDF direto para a pasta de downloads, sem abrir em nova aba/visualizador.
+// (tipo "octet-stream" + atributo download impedem o navegador de abrir o arquivo sozinho)
+function salvarPdf(doc, nome) {
+  const blob = new Blob([doc.output('arraybuffer')], { type: 'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = nome; a.style.display = 'none';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 1500);
+}
+
 const RED = [176, 30, 40], INK = [38, 40, 44], SOFT = [242, 243, 245];
 // Localização da Sillion C.I no Google Maps (link aparece no PDF só quando o local é Atendimento C.I)
 const MAPS_CI = 'https://www.google.com/maps/place/SILLION+C.I+Paraupebas+I/@-6.0966629,-49.8717792,17z/data=!3m1!4b1!4m6!3m5!1s0x92dd51000621b71d:0x3d96dd61011ce8a0!8m2!3d-6.0966682!4d-49.8691989!16s%2Fg%2F11x162yjyl';
@@ -148,7 +159,7 @@ function gerarPdfConfirmacao(a) {
   }
 
   rodape(doc);
-  doc.save(a.placa + ' ' + fmt(a.data).replace(/\//g, '-') + '.pdf'); // barra não vale em nome de arquivo
+  salvarPdf(doc, a.placa + ' ' + fmt(a.data).replace(/\//g, '-') + '.pdf'); // barra não vale em nome de arquivo
 }
 
 function gerarPdfTecnico(periodo, itens) {
@@ -168,5 +179,5 @@ function gerarPdfTecnico(periodo, itens) {
   rodape(doc);
   const d = iso => fmt(iso).replace(/\//g, '-'); // barra não vale em nome de arquivo
   const nomeArq = ini === '0000-00-00' ? 'AGENDA' : umDia ? 'AGENDA ' + d(ini) : 'AGENDA ' + d(ini) + ' a ' + d(fim);
-  doc.save(nomeArq + '.pdf');
+  salvarPdf(doc, nomeArq + '.pdf');
 }
