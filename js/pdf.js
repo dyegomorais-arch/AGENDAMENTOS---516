@@ -93,43 +93,58 @@ function gerarPdfConfirmacao(a) {
     doc.setFont('helvetica', 'normal').setFontSize(9).setTextColor(109, 112, 118)
       .text('Chegue com antecedência e apresente esta confirmação no atendimento.', 14, y + 54 + ex);
 
-    // Orientações importantes
-    const para1 = doc.splitTextToSize('Não atendemos nenhum veículo sem a presença de um acompanhante responsável no local. Se for notada a ausência do cliente ou acompanhante, o serviço será paralisado imediatamente até que o responsável retorne.', 174);
-    const para2 = doc.splitTextToSize('Caso o retorno demore, passaremos para o próximo veículo agendado. O veículo que ficou sem acompanhante só será atendido novamente se houver tempo disponível no final do expediente.', 174);
-    const bullets = [
-      'Chegar no horário programado e comunicar eventuais atrasos.',
-      'Veículo limpo internamente.',
-      'Condutor aguardar o término do serviço, visto que o local possui rotatividade de veículos.',
-      'Em caso de instalação: o veículo não pode ter outro sistema de telemetria/rastreador.'
-    ].map(b => doc.splitTextToSize(b, 168));
-    const obsLines = doc.splitTextToSize('Obs.: o local não permite a entrada com trajes inadequados (calção, bermuda, camiseta, chinelo, sandália).', 174);
+    // Orientações para atendimento no CI
+    const LH = 4.6, W = 182, PAD = 14;
+    const intro = doc.splitTextToSize('Para que o atendimento seja realizado de forma organizada e sem atrasos, pedimos que sejam observadas as seguintes orientações:', W);
+    const ITENS = [
+      ['Horário:', 'compareça no horário previamente programado. Caso ocorra algum imprevisto ou atraso, é importante comunicar antecipadamente. O tempo de tolerância para atraso é de 10 minutos.'],
+      ['Condições do veículo:', 'o veículo deve estar limpo internamente, facilitando a realização do serviço e proporcionando melhores condições para o atendimento.'],
+      ['Acompanhamento do serviço:', 'o condutor deverá permanecer no local e aguardar o término do atendimento, pois pode ser necessário realizar alguma verificação ou procedimento adicional no veículo.'],
+      ['Instalação de equipamentos:', 'nos casos de instalação, o veículo não poderá possuir outro sistema de telemetria ou rastreador instalado. Essa condição é necessária para evitar interferências ou conflitos entre os sistemas.'],
+      ['Vestimenta:', 'por se tratar de um local com normas específicas de acesso e segurança, não é permitida a entrada utilizando calção, bermuda, camiseta, chinelo ou sandália. É necessário comparecer utilizando vestimenta adequada para o ambiente.']
+    ];
+    const fecho = doc.splitTextToSize('O cumprimento dessas orientações ajuda a evitar atrasos, impedimentos de acesso e a necessidade de reagendamento do atendimento.', W);
 
-    let estH = 8 + para1.length * 4.6 + 3 + para2.length * 4.6 + 4;
-    bullets.forEach(bl => estH += bl.length * 4.6 + 1.2);
-    estH += 3 + obsLines.length * 4.6;
+    // quebra o texto de cada item deixando o rótulo (negrito) na 1ª linha
+    doc.setFontSize(9.3);
+    const itens = ITENS.map(([rot, txt]) => {
+      doc.setFont('helvetica', 'bold');
+      const rw = doc.getTextWidth(rot + ' ');
+      doc.setFont('helvetica', 'normal');
+      const linhas = []; let atual = '', disp = W - 6 - rw;
+      txt.split(' ').forEach(w => {
+        const t = atual ? atual + ' ' + w : w;
+        if (doc.getTextWidth(t) > disp && atual) { linhas.push(atual); atual = w; disp = W - 6; } else atual = t;
+      });
+      if (atual) linhas.push(atual);
+      return { rot, rw, linhas };
+    });
 
     const pageH = doc.internal.pageSize.getHeight();
+    let estH = 8 + intro.length * LH + 3 + fecho.length * LH + 4;
+    itens.forEach(it => estH += it.linhas.length * LH + 1.8);
     let yO = y + 54 + ex + 10;
     if (yO + estH > pageH - 16) { doc.addPage(); yO = 20; }
 
-    doc.setFont('helvetica', 'bold').setFontSize(11.5).setTextColor(...RED).text('Orientações importantes', 14, yO);
+    doc.setFont('helvetica', 'bold').setFontSize(11.5).setTextColor(...RED).text('Orientações para atendimento no CI', PAD, yO);
     yO += 7;
     doc.setFont('helvetica', 'normal').setFontSize(9.3).setTextColor(...INK);
-    doc.text(para1, 14, yO);
-    yO += para1.length * 4.6 + 3;
-    doc.text(para2, 14, yO);
-    yO += para2.length * 4.6 + 5;
+    doc.text(intro, PAD, yO);
+    yO += intro.length * LH + 3;
 
-    bullets.forEach(bl => {
-      doc.setFillColor(...RED).circle(16, yO - 1.3, 0.9, 'F');
-      doc.text(bl, 20, yO);
-      yO += bl.length * 4.6 + 1.2;
+    itens.forEach(it => {
+      if (yO + it.linhas.length * LH > pageH - 16) { doc.addPage(); yO = 20; }
+      doc.setFillColor(...RED).circle(PAD + 2, yO - 1.3, 0.9, 'F');
+      doc.setFont('helvetica', 'bold').setTextColor(...INK).text(it.rot, PAD + 6, yO);
+      doc.setFont('helvetica', 'normal');
+      it.linhas.forEach((ln, i) => { doc.text(ln, PAD + 6 + (i === 0 ? it.rw : 0), yO); yO += LH; });
+      yO += 1.8;
     });
 
-    yO += 3;
+    yO += 2;
+    if (yO + fecho.length * LH > pageH - 16) { doc.addPage(); yO = 20; }
     doc.setFont('helvetica', 'italic').setFontSize(8.8).setTextColor(109, 112, 118);
-    doc.text(obsLines, 14, yO);
-
+    doc.text(fecho, PAD, yO);
   }
 
   rodape(doc);

@@ -405,8 +405,7 @@ $('pdfTec').onclick = () => {
 const VEIC = [
   ['Leve', '🚗', ['Carro de passeio', 'Pickup (Hilux)', 'SUV', 'Van', 'Utilitário']],
   ['Médio', '🚐', ['Micro-ônibus', 'Caminhão leve (3/4)', 'Caminhão toco']],
-  ['Pesado', '🚛', ['Ônibus', 'Caminhão truck', 'Carreta / Cavalo mecânico', 'Caminhão-pipa', 'Caminhão munck', 'Caminhão fora de estrada']],
-  ['Máquinas', '🚜', ['Escavadeira', 'Carregadeira', 'Motoniveladora', 'Trator', 'Retroescavadeira', 'Empilhadeira', 'Rolo compactador']]
+  ['Pesado', '🚛', ['Ônibus', 'Caminhão truck', 'Carreta / Cavalo mecânico', 'Caminhão-pipa', 'Caminhão munck']]
 ];
 const TODOS = VEIC.flatMap(g => g[2]);
 function ddBuild() {

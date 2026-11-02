@@ -175,3 +175,5 @@ body:has(#login:not(.hide)){background:#111214}
 .det .quem small{display:block;font-size:.72rem}
 .badge.cf{background:#dff3e4;color:#1d7a3a}.badge.ca{background:#fbe1e3;color:var(--red-d)}
 .drawer:not(.on){box-shadow:none}
+
+.top .t small .os-t{font-size:1.15rem;font-weight:700;letter-spacing:.2em;color:#fff;vertical-align:-1px}
