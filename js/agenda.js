@@ -194,7 +194,7 @@ function painel(anima) {
   const ini = (() => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return isoDe(d); })();
   const fimSem = isoDe(new Date(new Date(ini + 'T12:00').getTime() + 6 * 864e5));
   const nome = nomeCurto(auth.currentUser?.email);
-  $('hello').textContent = (h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite') + (nome ? ', ' + nome : '') + ' 👋';
+  $('hello').textContent = (h >= 5 && h < 12 ? 'Bom dia' : h >= 12 && h < 18 ? 'Boa tarde' : 'Boa noite') + (nome ? ', ' + nome : '') + ' 👋';
   const ativos = t.filter(a => a.status !== 'Cancelado');
   const S = [
     ['Hoje', ativos.filter(a => a.data === hj).length, 'dia'],
