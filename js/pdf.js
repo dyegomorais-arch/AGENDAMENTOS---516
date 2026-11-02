@@ -1,8 +1,11 @@
 const RED = [176, 30, 40], INK = [38, 40, 44], SOFT = [242, 243, 245];
-const fmt = iso => iso.split('-').reverse().join('/');
-const semana = iso => ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'][new Date(iso + 'T12:00').getDay()];
+// Localização da Sillion C.I no Google Maps (link aparece no PDF só quando o local é Atendimento C.I)
+const MAPS_CI = 'https://www.google.com/maps/place/SILLION+C.I+Paraupebas+I/@-6.0966629,-49.8717792,17z/data=!3m1!4b1!4m6!3m5!1s0x92dd51000621b71d:0x3d96dd61011ce8a0!8m2!3d-6.0966682!4d-49.8691989!16s%2Fg%2F11x162yjyl';
+const ehCI = l => String(l || '').trim().toLowerCase() === 'atendimento c.i';
 // horário do agendamento no PDF: só o início, pontual (ex.: 10h00)
 const horarioPdf = a => String(horaInt(a.horario)).padStart(2, '0') + 'h00';
+const fmt = iso => iso.split('-').reverse().join('/');
+const semana = iso => ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'][new Date(iso + 'T12:00').getDay()];
 
 function cabecalho(doc, titulo, sub) {
   const w = doc.internal.pageSize.getWidth();
@@ -62,17 +65,33 @@ function gerarPdfConfirmacao(a) {
 
   // Salobo: PDF só com a tabela (sem "Onde comparecer" e sem orientações)
   if (String(a.local || '').trim().toLowerCase() !== 'salobo') {
+    const ci = ehCI(a.local), ex = ci ? 10 : 0; // com link do mapa a caixa fica 10 mm mais alta
     let y = doc.lastAutoTable.finalY + 12;
-    doc.setFillColor(...SOFT).roundedRect(14, y, 182, 42, 3, 3, 'F');
-    doc.setFillColor(...RED).rect(14, y, 3, 42, 'F');
+    doc.setFillColor(...SOFT).roundedRect(14, y, 182, 42 + ex, 3, 3, 'F');
+    doc.setFillColor(...RED).rect(14, y, 3, 42 + ex, 'F');
     doc.setFont('helvetica', 'bold').setFontSize(12).setTextColor(...INK).text('Onde comparecer', 22, y + 9);
     doc.setFont('helvetica', 'normal').setFontSize(10.5);
     doc.text('Local: ' + a.local, 22, y + 18);
     doc.text(doc.splitTextToSize('Endereço: ' + a.endereco, 168), 22, y + 25);
     doc.setFont('helvetica', 'bold').text('Procurar por: ' + a.contato, 22, y + 37);
 
+    // Só no Atendimento C.I: pino de GPS + link "Clique aqui" para o Google Maps
+    if (ci) {
+      const px = 25, py = y + 43.6;
+      doc.setFillColor(...RED);
+      doc.triangle(px - 1.5, py + 0.9, px + 1.5, py + 0.9, px, py + 4.2, 'F');
+      doc.circle(px, py, 2, 'F');
+      doc.setFillColor(255, 255, 255).circle(px, py, 0.8, 'F');
+      const txt = 'Clique aqui para abrir a localização no Google Maps';
+      doc.setFont('helvetica', 'bold').setFontSize(10).setTextColor(...RED);
+      const tw = doc.getTextWidth(txt);
+      doc.textWithLink(txt, 30, y + 46, { url: MAPS_CI });
+      doc.setDrawColor(...RED).setLineWidth(0.3).line(30, y + 47.2, 30 + tw, y + 47.2);
+      doc.link(22, y + 40, 8 + tw, 9, { url: MAPS_CI });
+    }
+
     doc.setFont('helvetica', 'normal').setFontSize(9).setTextColor(109, 112, 118)
-      .text('Chegue com antecedência e apresente esta confirmação no atendimento.', 14, y + 54);
+      .text('Chegue com antecedência e apresente esta confirmação no atendimento.', 14, y + 54 + ex);
 
     // Orientações importantes
     const para1 = doc.splitTextToSize('Não atendemos nenhum veículo sem a presença de um acompanhante responsável no local. Se for notada a ausência do cliente ou acompanhante, o serviço será paralisado imediatamente até que o responsável retorne.', 174);
@@ -90,7 +109,7 @@ function gerarPdfConfirmacao(a) {
     estH += 3 + obsLines.length * 4.6;
 
     const pageH = doc.internal.pageSize.getHeight();
-    let yO = y + 54 + 10;
+    let yO = y + 54 + ex + 10;
     if (yO + estH > pageH - 16) { doc.addPage(); yO = 20; }
 
     doc.setFont('helvetica', 'bold').setFontSize(11.5).setTextColor(...RED).text('Orientações importantes', 14, yO);
