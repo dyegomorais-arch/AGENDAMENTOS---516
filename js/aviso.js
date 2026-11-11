@@ -1,11 +1,10 @@
-// Aviso diário exibido após o login. O usuário precisa clicar em OK para ver o sistema.
-// Reaparece uma vez por dia. Para desligar: remova a linha <script src="js/aviso.js"> do agenda.html.
+// Aviso exibido a CADA login. O usuário precisa clicar em OK para ver o sistema.
+// O login (auth.js) zera o 'visto'; depois do OK, atualizar a página não mostra de novo.
+// Para desligar: remova a linha <script src="js/aviso.js"> do agenda.html.
 (function () {
-  var CHAVE = 'aviso-homologacao-v1';
-  var d = new Date();
-  var hoje = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  var CHAVE = 'aviso-homologacao-visto';
 
-  try { if (localStorage.getItem(CHAVE) === hoje) return; } catch (e) { /* sem storage: mostra sempre */ }
+  try { if (sessionStorage.getItem(CHAVE) === '1') return; } catch (e) { /* sem storage: mostra sempre */ }
 
   var css = document.createElement('style');
   css.textContent =
@@ -26,13 +25,13 @@
   ov.className = 'aviso-ov';
   ov.innerHTML =
     '<div class="aviso-box" role="alertdialog" aria-modal="true" aria-labelledby="avT" aria-describedby="avD">' +
-      '<div class="aviso-ic" aria-hidden="true">⚠️</div>' +
-      '<h2 id="avT">Aviso importante</h2>' +
+      '<div class="aviso-ic" aria-hidden="true">😔</div>' +
+      '<h2 id="avT">Preciso avisar vocês</h2>' +
       '<div id="avD">' +
-        '<p>Olá! Informamos que a ferramenta passará por uma análise de homologação interna e, por isso, ficará fora do ar por tempo indeterminado.</p>' +
-        '<p>Durante esse período, os agendamentos deverão voltar a ser realizados da forma tradicional.</p>' +
-        '<p class="dest">Pedimos, por gentileza, que, <b>até o dia 19/11</b>, os agendamentos sejam encaminhados pela forma tradicional, como era feito anteriormente.</p>' +
-        '<p class="fim">Agradecemos a compreensão e a colaboração de todos!</p>' +
+        '<p>Olá, pessoal! Infelizmente tenho um aviso triste: a ferramenta vai passar por uma análise de homologação interna e vai ficar fora do ar por tempo indeterminado.</p>' +
+        '<p>Sei que ela ajudava bastante no dia a dia, e sinto muito por isso. Por enquanto, vamos precisar voltar para a forma tradicional de agendamento.</p>' +
+        '<p class="dest">Peço, por favor, que <b>até o dia 19/11</b> vocês levem seus agendamentos para a forma tradicional, como era feito antes.</p>' +
+        '<p class="fim">Agradeço de coração a compreensão e o apoio de vocês. 💛</p>' +
       '</div>' +
       '<button type="button" class="aviso-ok" id="avOk">OK</button>' +
     '</div>';
@@ -47,7 +46,7 @@
   ov.addEventListener('keydown', function (e) { if (e.key === 'Tab') { e.preventDefault(); ok.focus(); } });
 
   ok.addEventListener('click', function () {
-    try { localStorage.setItem(CHAVE, hoje); } catch (e) { /* ignora */ }
+    try { sessionStorage.setItem(CHAVE, '1'); } catch (e) { /* ignora */ }
     document.body.style.overflow = overflowAnterior;
     ov.remove();
     css.remove();
