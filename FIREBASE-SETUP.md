@@ -1,4 +1,4 @@
-# Sillion Agenda + Firebase
+# Agenda de Serviço + Firebase
 
 1. Crie o projeto no console.firebase.google.com
 2. Authentication > Método de login > E-mail/senha (ativar)

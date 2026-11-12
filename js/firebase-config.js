@@ -1,4 +1,4 @@
-// Configuração do app Web do Firebase (projeto sillion-agenda).
+// Configuração do app Web do Firebase (projeto Firebase do sistema).
 // Estes valores NÃO são secretos; a segurança vem das Regras do Firestore e do Authentication.
 export const firebaseConfig = {
   apiKey: "AIzaSyDFmQ-HGeRcGlMyVyyAPAq9wXFv4mc8VnI",
