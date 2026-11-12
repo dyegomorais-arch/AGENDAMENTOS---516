@@ -227,21 +227,31 @@ body:has(#login:not(.hide)){background:#fff}
 .voltar:hover,.voltar:focus-visible{border-color:var(--red);background:#fff4f1;box-shadow:0 8px 22px rgba(224,103,79,.22)}
 .voltar:focus-visible{outline-color:var(--red)}
 
-/* ===== LOGIN COLORIDO (coral + azul do ícone, cartão branco) ===== */
-body:has(#login:not(.hide)){background:#4F6FAE}
-#login{background:linear-gradient(135deg,#E0674F,#4F6FAE)}
-#login::before{height:6px;background:linear-gradient(90deg,#F2B84B,#E0674F,#4F6FAE)}
-#login::after{opacity:.35;background-image:linear-gradient(rgba(255,255,255,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.14) 1px,transparent 1px)}
-.bgfoto{filter:saturate(.9) contrast(1.05) brightness(1)}
-.bgov{background:linear-gradient(135deg,rgba(224,103,79,.80),rgba(79,111,174,.86) 70%),radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.14),transparent 60%)}
-.poeira i{background:rgba(255,255,255,.75);box-shadow:0 0 10px rgba(255,255,255,.6)}
-#loginForm.card{background:#fff;border:0;box-shadow:0 30px 80px rgba(20,28,60,.38),0 2px 8px rgba(20,28,60,.12)}
-#loginForm.card::before{background:linear-gradient(90deg,#F2B84B,#E0674F,#4F6FAE)}
-#loginForm.card img{box-shadow:0 8px 22px rgba(43,48,64,.18),0 0 0 5px #fff;border-color:#e6e8ee}
-#loginForm .os-badge{background:linear-gradient(135deg,#4F6FAE,#3A5A9B);box-shadow:0 5px 14px rgba(79,111,174,.4)}
-#loginForm h1{color:#4F6FAE;letter-spacing:.1em;font-weight:600}
-#loginForm input:focus{border-color:#4F6FAE;box-shadow:0 0 0 4px rgba(79,111,174,.18)}
-#loginForm .eye:hover{color:#4F6FAE}
-.voltar{color:#fff;background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.55)}
-.voltar:hover,.voltar:focus-visible{background:rgba(255,255,255,.32);border-color:#fff;box-shadow:0 8px 22px rgba(20,28,60,.28)}
-.voltar:focus-visible{outline-color:#fff}
+/* ===== LOGIN PADRÃO 061/516: tema escuro grafite + acento coral suave ===== */
+:root{--lg-bg:#12161c;--lg-card:#20262f;--lg-line:#343e4d;--lg-input:#171c24;--lg-txt:#e6e9ef;--lg-mut:#a9b2c1;--lg-acc:#E58C76;--lg-btn:#C95B44;--lg-btn-d:#B84E39}
+body:has(#login:not(.hide)){background:var(--lg-bg)}
+#login{background:var(--lg-bg);color-scheme:dark}
+#login::before{height:4px;background:linear-gradient(90deg,var(--lg-btn),var(--lg-acc))}
+#login::after{opacity:.5;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px)}
+.bgfoto{filter:grayscale(.55) contrast(1.05) brightness(.85)}
+.bgov{background:linear-gradient(160deg,rgba(18,22,28,.80),rgba(26,32,41,.88))}
+.poeira,.arc{display:none}
+#loginForm.card{background:var(--lg-card);border:1px solid var(--lg-line);box-shadow:0 24px 60px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.3)}
+#loginForm.card::before{background:linear-gradient(90deg,var(--lg-btn),var(--lg-acc))}
+#loginForm.card::after{color:#7f8aa0}
+#loginForm.card img{background:#fff;border-color:var(--lg-line);box-shadow:0 8px 22px rgba(0,0,0,.4),0 0 0 5px var(--lg-card)}
+#loginForm .os-badge{background:var(--lg-btn);color:#fff;box-shadow:0 4px 14px rgba(201,91,68,.3)}
+#loginForm h1{color:var(--lg-mut);letter-spacing:.12em;font-weight:600}
+#loginForm label{color:var(--lg-mut)}
+#loginForm input{background:var(--lg-input);border-color:var(--lg-line);color:var(--lg-txt)}
+#loginForm input:focus{background:#1b212a;border-color:var(--lg-acc);box-shadow:0 0 0 4px rgba(229,140,118,.18)}
+#loginForm input:-webkit-autofill{-webkit-text-fill-color:var(--lg-txt);box-shadow:0 0 0 40px var(--lg-input) inset;caret-color:var(--lg-txt)}
+#loginForm .eye{color:var(--lg-mut)}
+#loginForm .eye:hover{background:rgba(255,255,255,.07);color:var(--lg-acc)}
+#loginForm .err{color:#ff9f8b}
+#loginForm .btn{background:var(--lg-btn);color:#fff;box-shadow:0 6px 16px rgba(201,91,68,.28)}
+#loginForm .btn:hover{background:var(--lg-btn-d);box-shadow:0 8px 20px rgba(201,91,68,.36)}
+#loginForm .btn:focus-visible{outline:3px solid rgba(229,140,118,.5);outline-offset:2px}
+.voltar{color:var(--lg-txt);background:rgba(32,38,47,.85);border-color:var(--lg-line);box-shadow:none}
+.voltar:hover,.voltar:focus-visible{background:var(--lg-card);border-color:var(--lg-acc);box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.voltar:focus-visible{outline-color:var(--lg-acc)}
