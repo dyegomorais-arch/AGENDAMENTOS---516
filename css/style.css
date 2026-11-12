@@ -226,3 +226,22 @@ body:has(#login:not(.hide)){background:#fff}
 .voltar{color:var(--ink);background:rgba(255,255,255,.88);border-color:var(--line)}
 .voltar:hover,.voltar:focus-visible{border-color:var(--red);background:#fff4f1;box-shadow:0 8px 22px rgba(224,103,79,.22)}
 .voltar:focus-visible{outline-color:var(--red)}
+
+/* ===== LOGIN COLORIDO (coral + azul do ícone, cartão branco) ===== */
+body:has(#login:not(.hide)){background:#4F6FAE}
+#login{background:linear-gradient(135deg,#E0674F,#4F6FAE)}
+#login::before{height:6px;background:linear-gradient(90deg,#F2B84B,#E0674F,#4F6FAE)}
+#login::after{opacity:.35;background-image:linear-gradient(rgba(255,255,255,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.14) 1px,transparent 1px)}
+.bgfoto{filter:saturate(.9) contrast(1.05) brightness(1)}
+.bgov{background:linear-gradient(135deg,rgba(224,103,79,.80),rgba(79,111,174,.86) 70%),radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.14),transparent 60%)}
+.poeira i{background:rgba(255,255,255,.75);box-shadow:0 0 10px rgba(255,255,255,.6)}
+#loginForm.card{background:#fff;border:0;box-shadow:0 30px 80px rgba(20,28,60,.38),0 2px 8px rgba(20,28,60,.12)}
+#loginForm.card::before{background:linear-gradient(90deg,#F2B84B,#E0674F,#4F6FAE)}
+#loginForm.card img{box-shadow:0 8px 22px rgba(43,48,64,.18),0 0 0 5px #fff;border-color:#e6e8ee}
+#loginForm .os-badge{background:linear-gradient(135deg,#4F6FAE,#3A5A9B);box-shadow:0 5px 14px rgba(79,111,174,.4)}
+#loginForm h1{color:#4F6FAE;letter-spacing:.1em;font-weight:600}
+#loginForm input:focus{border-color:#4F6FAE;box-shadow:0 0 0 4px rgba(79,111,174,.18)}
+#loginForm .eye:hover{color:#4F6FAE}
+.voltar{color:#fff;background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.55)}
+.voltar:hover,.voltar:focus-visible{background:rgba(255,255,255,.32);border-color:#fff;box-shadow:0 8px 22px rgba(20,28,60,.28)}
+.voltar:focus-visible{outline-color:#fff}

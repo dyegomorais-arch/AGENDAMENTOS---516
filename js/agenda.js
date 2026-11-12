@@ -256,7 +256,7 @@ function render(anima = false) {
   if (!dd.length) { $('lista').innerHTML = '<p class="empty">Nenhum agendamento neste período.</p>'; return; }
   const g = {}; dd.forEach(a => (g[a.data] = g[a.data] || []).push(a));
   $('lista').innerHTML = Object.entries(g).map(([d, it]) =>
-    `<div class="day"><h3>AGENDA DE SERVIÇO - ${br(d)} · ${diaSem(d)}</h3>${it.map((a, i) => card(a, i, true, anima)).join('')}</div>`).join('');
+    `<div class="day"><h3>PROGRAMAÇÃO DE AGENDAMENTO - ${br(d)} · ${diaSem(d)}</h3>${it.map((a, i) => card(a, i, true, anima)).join('')}</div>`).join('');
 }
 $('tabs').onclick = e => {
   if (!e.target.dataset.v) return;

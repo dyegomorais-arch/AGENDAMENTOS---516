@@ -45,7 +45,7 @@ function rodape(doc) {
     doc.setFillColor(...SOFT).rect(0, h - 12, w, 12, 'F');
     doc.setFillColor(...RED).rect(0, h - 12, w, 0.8, 'F');
     doc.setFontSize(8).setTextColor(...INK);
-    doc.text('Agenda de serviço · OS 516 · Emitido em ' + new Date().toLocaleString('pt-BR'), 14, h - 5);
+    doc.text('Programação de agendamento · OS 516 · Emitido em ' + new Date().toLocaleString('pt-BR'), 14, h - 5);
     const label = 'Suporte: Dyego Morais';
     const textX = w - 14;
     const tw = doc.getTextWidth(label);
@@ -168,7 +168,7 @@ function gerarPdfTecnico(periodo, itens) {
   const umDia = ini === fim;
   const doc = new jspdf.jsPDF({ orientation: 'landscape' });
   const sub = umDia ? fmt(ini) + ' · ' + semana(ini) : rotulo.charAt(0).toUpperCase() + rotulo.slice(1);
-  cabecalho(doc, 'Agenda de serviço', sub);
+  cabecalho(doc, 'Programação de agendamento', sub);
   doc.autoTable({
     startY: 48, theme: 'grid', styles: { fontSize: 10, cellPadding: 3.2, lineColor: [226, 228, 232] },
     headStyles: { fillColor: BLUE, textColor: 255 }, alternateRowStyles: { fillColor: SOFT },
